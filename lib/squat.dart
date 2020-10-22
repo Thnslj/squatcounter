@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,11 +10,18 @@ class SquatWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<CounterCubit, int>(
-        builder: (context, state) {
-          return Camera();
-        },
-      ),
+      body: BlocBuilder<CounterCubit, int>(builder: (context, state) {
+        return FutureBuilder<List<CameraDescription>>(
+            future: availableCameras(),
+            builder:
+                (context, AsyncSnapshot<List<CameraDescription>> snapshot) {
+              if (snapshot.hasData) {
+                return Camera(snapshot.data);
+              } else {
+                return CircularProgressIndicator();
+              }
+            });
+      }),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [

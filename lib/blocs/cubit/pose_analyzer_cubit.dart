@@ -34,13 +34,31 @@ class PoseAnalyzerCubit extends Cubit<PoseAnalyzeState> {
       }).toList(),
       imageHeight: img.height,
       imageWidth: img.width,
-      numResults: 2,
+      numResults: 1,
     );
 
     if (recognitions.length == 0) {
       this.emit(PoseAnalyzeResult(PoseResult.none));
     } else {
-      this.emit(PoseAnalyzeResult(PoseResult.squatting));
+      var keypoints = recognitions[0]["keypoints"];
+
+      final leftKnee = recognitions[0]["keypoints"]
+          .values
+          .singleWhere((element) => element["part"] == "leftKnee", orElse: () {
+        return null;
+      });
+
+      final leftHip = recognitions[0]["keypoints"]
+          .values
+          .singleWhere((element) => element["part"] == "leftHip", orElse: () {
+        return null;
+      });
+
+      if (leftKnee?.x["y"] > leftHip?.x["y"]) {
+        this.emit(PoseAnalyzeResult(PoseResult.squatting));
+      }
+
+      this.emit(PoseAnalyzeResult(PoseResult.standing));
     }
     this.isDetecting = false;
   }

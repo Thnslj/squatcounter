@@ -7,7 +7,7 @@ class PoseAnalyzerInitial extends PoseAnalyzeState {}
 
 class PoseAnalyzerReady extends PoseAnalyzeState {}
 
-enum PoseResult { squatting, sitting, none }
+enum PoseResult { squatting, standing, none }
 
 class PoseAnalyzeResult extends PoseAnalyzeState {
   final PoseResult squatAnalyze;
